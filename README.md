@@ -1,0 +1,1 @@
+This is an offline first  Currency Converter application
