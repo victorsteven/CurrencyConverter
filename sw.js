@@ -27,9 +27,9 @@ self.addEventListener('activate', event => {
     );
 });
 //Use cache to run app
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', e => {
 
-    event.respondWith(
+    e.respondWith(
         caches.match(event.request).then(response => {
             return response || fetch(event.request);
         })
