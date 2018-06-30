@@ -5,7 +5,9 @@ This is an offline first  Currency Converter application
 
 INSTALLATION
 
-Download the zip file or clone the repository from the terminal/command line using: 
+Download the zip file or clone the repository from the terminal/command line 
+using: 
+
 "git clone git@github.com:victorsteven/CurrencyConverter.git"
 
 Then,  "cd to CurrencyConverter" 
