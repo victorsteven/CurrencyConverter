@@ -3,6 +3,7 @@ import Database from '../idb';
 //Register Service Worker
 if('serviceWorker' in navigator){  
     navigator.serviceWorker.register('serviceWorker.js')
+
     .then(() =>{
         console.log('Service Worker Registered');
     });
