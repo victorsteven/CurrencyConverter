@@ -97,7 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error(`Error getting conversion rate: ${err}`,);
                 //Get the currency exchange rate when the user is offline
                 DB.getCurrencies(queryString).then(data => {
-                    if(typeof data === 'undefined') return;
+                    if(typeof data === 'undefined') 
+                    return;
                     calculate_rate(data, valueEntered);
                 });
             });     

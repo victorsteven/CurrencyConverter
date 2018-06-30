@@ -6,7 +6,8 @@ self.addEventListener('install', event => {
             return cache.addAll([
                 './index.html',
                 './css/app.css',
-                './public/js/currency.min.js'
+                './public/js/currency.min.js',
+                'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
             ]);
         })
     );
