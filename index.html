@@ -5,44 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/app.css">
     <title>Currency Converter</title>
 </head>
 <body>
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page"><strong style="color:purple;">Currency Converter Application</strong></li>
-        </ol>
-    </nav>
     <div class="container">
-            <div class="px-5 py-0">
-                <div class="form-row my-3 px-0">   
-                    <div class="col text-left">
-                        <input type="number" name="currency" id="value-to-convert" class="form-control two" placeholder="Enter Value to Convert" required>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header header-style">
+                        Currency Converter
                     </div>
-                    <div class="col text-left">
-                        <select id="convert-from" class="form-row form-control">  </select>
-                    </div>
-                </div>
-            </div>
-            <div class="px-5 py-0">
-                <div class="form-row my-3 px-0">
-                        <div class="col text-left">
-                            <select id="convert-to" class="form-row form-control"> 
-                            </select>
+                    <div class="card-body">
+                        <div class="form-group row  ml-auto mr-auto">
+                            Enter Value
+                        
+                            <div class="col">
+                                <input type="number" class="form-control" id="value-to-convert" min="1" required>
+                            </div>
+                            
                         </div>
-                    <div class="col text-left">
-                        <input type="text" id="converted-value" class="form-control" placeholder="Converted Value" readonly>
+                        <div class="form-group row ml-auto mr-auto">
+                            
+                            <div class="col-md-4 offset-md-2 col-sm-4 offset-sm-2 select-from">
+                                    From:
+                                <select id="convert-from" class="form-row form-control">  </select>
+                            </div>
+                            <div class="col-md-4 offset-md-1 col-sm-4 offset-sm-2 select-to" >
+                                To:
+                                
+                                    <select id="convert-to" class="form-row form-control">  </select>
+                                
+                            </div>
+                            
+                        </div>
+
+                        <div class="form-group row result-style ml-auto mr-auto">
+                            Result Value
+                        
+                            <div class="col">
+                                <input type="number" class="form-control"  id="converted-value" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-0 col-md-4 offset-md-4 col-sm-4 offset-sm-4">
+                                <button id="convert-button" class="btn btn-success button-style">Convert Currency  
+                                </button>
+                        </div>
+
                     </div>
                 </div>
             </div>
-            <div class="text-center">
-                <button id="convert-button" class="btn btn-success">Convert Currency</button> 
-            </div>
-                         
+        </div>
     </div>
-    <script src="js/currency.js"></script>
-    <script src="sw.js"></script>
+    <script src="public/js/currency.min.js"></script>
+   
+    <script src="serviceWorker.js"></script>
 </body>
-
 </html>
+
+
+
+

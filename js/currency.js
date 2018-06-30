@@ -1,7 +1,8 @@
+import Database from '../idb';
 
 //Register Service Worker
-if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js')
+if('serviceWorker' in navigator){  
+    navigator.serviceWorker.register('serviceWorker.js')
     .then(() =>{
         console.log('Service Worker Registered');
     });
@@ -9,75 +10,106 @@ if('serviceWorker' in navigator){
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const body = document.querySelector('body');
+   
     const convertFrom = document.getElementById('convert-from');
     const convertTo = document.getElementById('convert-to');
 
     const convertButton = document.getElementById('convert-button');
     const convertedValue = document.querySelector('input#converted-value');  
+    const body = document.querySelector('body');
 
     function value_to_convert(){
         const valueEntered = document.getElementById('value-to-convert').value;
         return valueEntered;
     }
 
-    function node_option(currency){
-        if(currency === 'undefined'){
-            return 'Please input a valid currency value';
+    function node_option(nodeType, currency){
+        if(arguments.length !==2){
+            console.error('Two arguments are needed.');
         }else{
-            const createOptionNode = document.createElement('option');
+            const createOptionNode = document.createElement(nodeType);
             createOptionNode.innerText = currency;
 
             return createOptionNode;
         }
     }
 
-    function add_currencies(currencies){
-        if(!(currencies.length === 0 && currencies === 'undefined')){
-            currencies.map(currency => {
-                convertFrom.appendChild(node_option(currency));
-                convertTo.appendChild(node_option(currency));
-            });
-        }else{
-            return 'Please select the currency to be converted from';
+    function add_currencies(arrayOfCurrencies){
+
+        if(
+            arrayOfCurrencies.length === 0 || typeof arrayOfCurrencies === 'undefined'
+        ){
+        console.error('Currency array cannot be empty or undefined.');
         }
+        const nodeTypeToCreate = 'option';
+
+            arrayOfCurrencies.map(currency => {
+                convertFrom.appendChild(node_option(nodeTypeToCreate, currency));
+                convertTo.appendChild(node_option(nodeTypeToCreate, currency));
+        });
     }
 
     function get_currencies(){
-        fetch('https://free.currencyconverterapi.com/api/v5/currencies')
+        const url = 'https://free.currencyconverterapi.com/api/v5/currencies';
+        fetch(url, {
+            cache: 'default',
+        })
             .then(res => res.json())
             .then(data => {
-                const currencies = Object.keys(data.results).sort();
+                const arrayOfCurrencies = Object.keys(data.results).sort();
 
-                add_currencies(currencies);
-            }).catch(err=> console.error(`${err}`
-        ),
-    );
+                //Save a users currency exchange used when online for usage when the user is offline
+                Database.saveCurrencyArray('allCurrencies', arrayOfCurrencies);
+
+                add_currencies(arrayOfCurrencies);
+            }).catch(err=> {
+                console.error(`Error while getting currency: ${err}`,
+        );
+        //Get the exchange rate when offline
+        Database.getCurrencies('allCurrencies').then(arrayOfCurrencies => {
+            if(typeof arrayOfCurrencies === 'undefined')
+            return;
+            add_currencies(arrayOfCurrencies);
+        });
+       }); 
     }
 
-    function get_rate(url){
+
+    function get_rate(url, queryString){
+        if (arguments.length !== 2) {
+            console.error('Two currencies are needed o perform this operation.');
         
-        if(url === 'undefined'){
-            return "Please enter a valid URL.";
         }else{
-            fetch(url)
+            const valueEntered = value_to_convert();
+            fetch(url, {
+                cache: 'default',
+            })
             .then(res => res.json())
             .then(data => {
-                const valueEntered = value_to_convert();
                 const exchangeRate = Object.values(data);
+
+                //Save currency currency used during online transaction to be used offline
+                Database.saveCurrencies(queryString, exchangeRate);
+
                 calculate_rate(...exchangeRate, valueEntered);
-            }).catch(err => console.error(`${err}`));
-            
+            }).catch(err =>{
+                console.error(`Error getting conversion rate: ${err}`,);
+                //Get the currency exchange rate when the user is offline
+                Database.getCurrencies(queryString).then(data => {
+                    if(typeof data === 'undefined') return alert('cannot get offline exchange');
+                    calculate_rate(data, valueEntered);
+                });
+            });     
         }
 
     }
    
-    function api_url(currency1, currency2){
-        if(arguments.length == 2){
-            const currencyUrl = `https://free.currencyconverterapi.com/api/v5/convert?q=${currency1}_${currency2}&compact=ultra`;
-            return currencyUrl;
+    function api_url(queryString){
+        if(typeof queryString === 'undefined'){
+            console.error('The parameter passed to the function is undefined.');
         }else{
-            return 'Two currencies are needed o perform this operation.';
+            const currencyUrl = `https://free.currencyconverterapi.com/api/v5/convert?q=${queryString}&compact=ultra`;
+            return currencyUrl;
         }
     }
 
@@ -85,9 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const currency1 = document.getElementById('convert-from').value;
         const currency2 = document.getElementById('convert-to').value;
 
-        const url = api_url(currency1, currency2);
+        const currencyQueryString = `${currency1}_${currency2}`;
 
-        get_rate(url);
+        const url = api_url(currencyQueryString);
+
+        get_rate(url, currencyQueryString);
     }
 
     function calculate_rate(rate, valueEntered){
@@ -109,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function convert(){
         convertButton.addEventListener('click', apply_rate);
-        body.addEventListener('keydowm', e => enter_pressed(e));
+        body.addEventListener('keydown', e => enter_pressed(e));
     }
 
     function process_request(){

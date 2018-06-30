@@ -1,0 +1,47 @@
+body{
+    margin-top: 100px;
+    background: gray;
+}
+
+.header-style{
+    text-align: center;
+    font-size: 20px;
+    background: #69ad78;
+    color: #fff;
+}
+
+.result-style{
+    margin-top:20px;
+}
+ @media(max-width: 768px){
+     button{
+         text-align: center;
+         margin-left: 65px;
+     }
+ }
+
+ .button-style{
+     color: white;
+     background: #67be7a;
+ }
+.select-from{
+    margin-left: 90px;
+}
+.select-to{
+    margin-left: 76px;
+}
+
+@media(max-width: 768px){
+    .select-from{
+        margin-left: 90px;
+        
+    }
+    .select-to{
+        margin-top: 10px;
+        margin-left: 90px;
+    }
+}
+
+
+
+

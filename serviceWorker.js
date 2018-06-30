@@ -1,13 +1,11 @@
-
 var staticCacheName = 'currency-static-v2';
 
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(staticCacheName).then(cache => {
             return cache.addAll([
-                './.nojekyll',
                 './index.html',
-                '/js/currency.js'  
+                './js/currency.js'  
             ]);
         })
     );
@@ -27,11 +25,19 @@ self.addEventListener('activate', event => {
     );
 });
 //Use cache to run app
-self.addEventListener('fetch', e => {
+// self.addEventListener('fetch', event => {
 
-    e.respondWith(
-        caches.match(event.request).then(response => {
-            return response || fetch(event.request);
-        })
+//     event.respondWith(
+//         caches.match(event.request).then(response => {
+//             return response || fetch(event.request);
+//         })
+//     );
+// });
+
+self.addEventListener('fetch', event => {
+    event.respondWith(
+      caches
+        .match(event.request)
+        .then(response => response || fetch(event.request)),
     );
 });
