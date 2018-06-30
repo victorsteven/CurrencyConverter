@@ -1,4 +1,4 @@
-import Database from '../idb';
+import DB from '../idb';
 
 //Register Service Worker
 if('serviceWorker' in navigator){  
@@ -60,14 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const arrayOfCurrencies = Object.keys(data.results).sort();
 
                 //Save a users currency exchange used when online for usage when the user is offline
-                Database.saveCurrencyArray('allCurrencies', arrayOfCurrencies);
+                DB.saveCurrencyArray('allCurrencies', arrayOfCurrencies);
 
                 add_currencies(arrayOfCurrencies);
             }).catch(err=> {
                 console.error(`Error while getting currency: ${err}`,
         );
         //Get the exchange rate when offline
-        Database.getCurrencies('allCurrencies').then(arrayOfCurrencies => {
+        DB.getCurrencies('allCurrencies').then(arrayOfCurrencies => {
             if(typeof arrayOfCurrencies === 'undefined')
             return;
             add_currencies(arrayOfCurrencies);
@@ -90,14 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const exchangeRate = Object.values(data);
 
                 //Save currency currency used during online transaction to be used offline
-                Database.saveCurrencies(queryString, exchangeRate);
+                DB.saveCurrencies(queryString, exchangeRate);
 
                 calculate_rate(...exchangeRate, valueEntered);
             }).catch(err =>{
                 console.error(`Error getting conversion rate: ${err}`,);
                 //Get the currency exchange rate when the user is offline
-                Database.getCurrencies(queryString).then(data => {
-                    if(typeof data === 'undefined') return alert('cannot get offline exchange');
+                DB.getCurrencies(queryString).then(data => {
+                    if(typeof data === 'undefined') return;
                     calculate_rate(data, valueEntered);
                 });
             });     

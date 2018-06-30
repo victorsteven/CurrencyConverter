@@ -15,7 +15,7 @@ var dbPromise = idb.open('currency-db', 1, upgradeDb => {
     }
 });
 
-export default class Database {
+export default class DB {
     static getCurrencies(key){
         return dbPromise
             .then(db => {
